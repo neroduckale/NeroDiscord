@@ -11,6 +11,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.awt.*;
+import java.util.Objects;
 
 import static ru.neroduckale.NeroDiscord.*;
 import static ru.neroduckale.Utils.*;
@@ -66,7 +67,7 @@ public class Events {
         var localedesc = localtestr + ".description";
         var translatedTitle = getJson(localetitle);
         var translatedDescription = getJson(localedesc);
-        if (translatedTitle != null && translatedDescription != null) {
+        if (!Objects.equals(translatedTitle, "null") && !Objects.equals(translatedDescription, "null")) {
             SendEmbedNewAdvancement(translatedTitle, translatedDescription, nickname);
             return;
         }
