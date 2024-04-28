@@ -11,7 +11,6 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.awt.*;
-import java.util.Objects;
 
 import static ru.neroduckale.NeroDiscord.*;
 import static ru.neroduckale.Utils.*;
@@ -43,10 +42,7 @@ public class Events {
     public static void onDeath(LivingEntity livingEntity, DamageSource damageSource) {
         if (livingEntity instanceof ServerPlayerEntity) {
             var nickname = livingEntity.getDisplayName().getString();
-
-            LOGGER.info(livingEntity.getDisplayName().getString());
-            LOGGER.info(damageSource.getType().msgId());
-            var localized = getLocalizedDeathMessage(livingEntity, damageSource);
+            var localized = damageSource.getDeathMessage(livingEntity).getString();
             SendEmbedWithPlayerAsServer(localized, nickname, Color.red);
         }
     }
@@ -59,19 +55,9 @@ public class Events {
         SendEmbedAsServer("Сервер закрыт!", Color.red);
     }
 
-    public static void OnNewAdvancement(Advancement advancement, String nickname) {
-        var lclstr = advancement.getId().getPath();
-        lclstr = lclstr.replace("/", ".");
-        var localtestr = "advancements.%s".formatted(lclstr);
-        var localetitle = localtestr + ".title";
-        var localedesc = localtestr + ".description";
-        var translatedTitle = getJson(localetitle);
-        var translatedDescription = getJson(localedesc);
-        if (!Objects.equals(translatedTitle, "null") && !Objects.equals(translatedDescription, "null")) {
-            SendEmbedNewAdvancement(translatedTitle, translatedDescription, nickname);
-            return;
-        }
-        SendEmbedNewAdvancement(advancement.getDisplay().getTitle().getString(), advancement.getDisplay().getDescription().getString(), nickname);
-        
+    public static void OnNewAdvancement(Advancement advancement, ServerPlayerEntity nickname) {
+        String title = advancement.getDisplay().getTitle().getString();
+        String description = advancement.getDisplay().getDescription().getString();
+        SendEmbedNewAdvancement(title, description, nickname.getDisplayName().getString());
     }
 }

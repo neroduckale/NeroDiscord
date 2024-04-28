@@ -1,11 +1,7 @@
 package ru.neroduckale;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-
 import java.awt.*;
 import java.io.IOException;
-import java.util.Objects;
 
 import static ru.neroduckale.NeroDiscord.*;
 
@@ -43,28 +39,6 @@ public class Utils {
         } catch (IOException exception) {
             LOGGER.error(exception.getMessage());
         }
-    }
-
-    public static String getLocalizedDeathMessage(LivingEntity p_19343_, DamageSource dms) {
-        LivingEntity livingentity = p_19343_.getAttacker();
-        String localestr = "death.attack." + dms.getType().msgId();
-        String nicknameKilled = p_19343_.getDisplayName().getString();
-        String translated;
-        translated = getJson(localestr);
-        if (Objects.equals(translated, "null")) return "%s умер на сво".formatted(nicknameKilled);
-        LOGGER.error(translated);
-        if (livingentity != null) {
-            return String.format(translated, nicknameKilled, livingentity.getDisplayName().getString());
-        }
-        
-        return String.format(translated, nicknameKilled);
-    }
-
-    public static String getJson(String member) {
-        if (jsonObject.has(member)) {
-            return jsonObject.get(member).getAsString();
-        }
-        return "null";
     }
 
     public static void SendEmbedNewAdvancement(String title, String description, String nickname) {
